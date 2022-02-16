@@ -1,0 +1,157 @@
+Mikołaj Zapotoczny
+Implementacje algorytmów sortowania
+Data: 18.12.19
+
+START
+Na początku wytłumaczę różnicą pomiędy tablicami indeksowanymi bezpośrednio, oraz tymi, które sa indeksowane pośrednio. 
+Indeksowanie pośrednie wymaga tylko jednej tablicy, której wartości są jej indeksami. Stosuje się je do sortowania liczb.
+Do sortowania znaków lub ciągów znaków stosuje się indeksowanie pośrednie. Dzieje się tak dlatego, że podczas gdy wartością danego elementu tablicy jest znak (char) to wtedy na tej wartości nie można dokonywać operacji logicznych z stu procentową pewnością. Dlatego wprowadza się kolejną tablicę - indeksów i nadaje się odpowiednim znakom odpowiednie indeksy, które mogą być już sortowane. 
+
+
+
+
+1. SORTOWANIE BĄBELKOWKE
+-Polega ono na kolejnym sprawdzaniu dwóch kolejnych liczb i zamienianiu ich miejscami jeżeli pierwsza z nich jest większa od drugiej. Jest to dosyć wolny algorytm sortujący, bo trzeba za każdym razem przechodzić przez całą tablicę, ale jest prosty i skuteczny. Ten algorytm potrzebuje bardzo wielu operacji, aby posortować dane. Mamy jednak pewność, że dane będą posortowane poprawnie.
+Złożność czasowa:      O(n^2)
+Złożność pamieciowa:   O(1)
+
+
+-Implementację sortowania przesyłam w pliku: sort1.c (dla tablicy indeksowanej bezpośrednio).
+
+-Najistotniejszy fragment programu przedstawiający to sortowanie
+wymiar - jest to wymiar tablicy.
+pomoc  - jest to zmienna pomocnicza do przechowywania wartości jednej ze zmiennych przy zmianie wartości.
+tab[]  - tablica, w której są zapisywane liczby.
+
+for(i=0;i<wymiar-1;i++)
+{
+    for (j=0; j<wymiar-1-i; j++)
+    {
+        if (tab[j]>tab[j+1])      /* sprawdzenie który z sąsiednich elementów jest większy */
+        {
+            pomoc=tab[j];         /* zastosowanie zmiennej pomocniczej do zamiany wartości liczb */
+            tab[j]=tab[j+1];
+            tab[j+1]=pomoc;
+        }
+
+    }
+}
+
+
+-Implementację programu przesyłam w pliku: sort2.c (dla tablicy indeksowanej pośrednio).
+
+-Najistotniejszy fragment programu przedstawiający to sortowanie
+wymiar - jest to wymiar tablicy
+pomoc  - jest to zmienna pomocnicza do przechowywania wartości jednej ze zmiennych przy zmianie wartości.
+pomoc1 - Jest tym samym co pomoc, tylko, że dla drugiej tablicy, gdyż w pośrednim indeksowaniu operacje wykonujemy na dwóch tablicach jednocześnie.
+tab[]  - tablica, w której są zapisywane znaki.
+indeks[] - tablica w której są zapisywane indeksy odpowiadające kolejnym znakom.
+
+for(i=0;i<wymiar-1;i++)
+{
+    for (j=0; j<wymiar-1-i; j++)
+    {
+        if (indeks[j]>indeks[j+1])      /* sprawdzenie który z sąsiednich elementów jest większy */
+        {
+        pomoc=indeks[j];         /* zastosowanie zmiennej pomocniczej do zamiany wartości liczb */
+        pomoc1=tab[j];           /* dla indeksowania pośredniego równolegle wykonujemy operacje dla obu tablic */
+
+        indeks[j]=indeks[j+1];
+        tab[j]=tab[j+1];
+
+        indeks[j+1]=pomoc;
+        tab[j+1]=pomoc1;
+        }
+
+    }
+}
+printf("%c",tab[indeks[i]]);  /* charakterystyczne wywołanie dla tablic indeksowanych pośrednio */
+
+
+
+
+2. Sortowanie przez wstawianie
+Polega na dokładaniu (w odpowiednie miejsce) po jednej liczbie do już wcześniej posortowanych liczb. Jest to w pewnym sensie ciągle się zmieniający podział liczb na posortowane i nie posortowane. Dąży się tym samym do sortowania liczb.
+Złożność czasowa i pamięciowa tego sortowania jest taka sama co w przypadku sortowania bąbelkowego. Nie jest to zbyt szybki algorytm sortowania, bo też przechodzimy przez pewną część tablicy za każdym razem, ale jest to sposób podobnie jak sortowanie bąbelkowe zapewniający skuteczność.
+
+
+-Implementację sortowania przesyłam w pliku: sort3.c (dla tablicy indeksowanej bezpośrednio).
+
+-Najistotniejszy fragment programu przedstawiający to sortowanie
+wymiar - jest to wymiar tablicy.
+pomoc  - jest to zmienna pomocnicza do przechowywania wartości jednej ze zmiennych przy zmianie wartości.
+tab[]  - tablica, w której są zapisywane liczby.
+
+for (i=0; i<wymiar; i++)               /* pętla pozwalająca sprawdzić kolejne elementy */
+    {
+        pomoc=tab[i];                  /* zmienna pomocnicza zapisująca wartość tab[i], na wypadek zmiany */
+        for (j=i-1; j>=0 && tab[j]>pomoc; j--) 
+        {                              /* pętla sprawdzająca poprzedni element dla danego elementu do momentu wyjścia z tablicy */
+            tab[j+1]=tab[j];           /* zamiany następują wielokrotnie, gdyż każdy kolejny element ze stosu przechodzi przez pewną część tablicy */
+        }
+        tab[j+1]=pomoc;
+    }
+
+
+
+-Implementację programu przesyłam w pliku: sort4.c (dla tablicy indeksowanej pośrednio).
+
+-Najistotniejszy fragment programu przedstawiający to sortowanie
+wymiar - jest to wymiar tablicy
+pomoc  - jest to zmienna pomocnicza do przechowywania wartości jednej ze zmiennych przy zmianie wartości.
+pomoc1 - Jest tym samym co pomoc, tylko, że dla drugiej tablicy, gdyż w pośrednim indeksowaniu operacje wykonujemy na dwóch tablicach jednocześnie.
+tab[]  - tablica, w której są zapisywane znaki.
+indeks[] - tablica w której są zapisywane indeksy odpowiadające kolejnym znakom.
+
+for(i=0; i<wymiar; i++)               /* pętla pozwalająca sprawdzić kolejne elementy */
+    {
+        pomoc=indeks[i];              /* zmienne pomocnicze zapisujące wartość tab[i] i indeks[i], na wypadek zmiany */
+        pomoc1=tab[i];
+        for(j=i-1; j>=0 && indeks[j]>pomoc; j--) 
+        {                             /* pętla sprawdzająca każdy element od końca listy i układająca pojedyńcze */
+            indeks[j+1]=indeks[j];    /* wartości, aż do momentu znalezienia wartości mniejszej, albo końca tablicy */
+            tab[j+1]=tab[j];
+        }                             /* operacje są wykonywane równolegle na obu tablicach, bo jest to sortowanie pośrednie */
+        indeks[j+1]=pomoc;
+        tab[j+1]=pomoc1;
+    }
+
+printf("%c",tab[indeks[i]]);  /* charakterystyczne wywołanie dla tablic indeksowanych pośrednio */
+
+
+
+
+UWAGI ODNOŚNIE PROGRAMÓW
+
+-Programy poprawnie sortują dane wraz z uwzględnieniem znaku zakończenia tablicy zmiennych typu char ('/0')
+
+-Programy sortowania dla tablic indeksowanych pośrednio działają tylko dla znaków, nie ciągów znaków! Ponadto znaki należy wpisywać bez znaków białych pomiędzy nimi. Nie skupiłem się na dopracowaniu programów pod tym kątem, bo w zadaniu główną rolę odgrywały algorytmy sortowania, toteż wszystko inne zeszło na dalszy plan. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
